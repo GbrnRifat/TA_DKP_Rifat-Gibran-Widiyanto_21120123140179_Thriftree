@@ -1,14 +1,11 @@
-//---------------------------------------------------------------------------
-
 #include <vcl.h>
 #pragma hdrstop
-
 #include "Inti.h"
 #include <iostream>
 #include <vector>
 #include "MetodePembayaran.h"
 
-//---------------------------------------------------------------------------
+
 #pragma package(smart_init)
 #pragma resource "*.dfm"
 TForm1 *Form1;
@@ -92,7 +89,7 @@ public:
 		}
 	}
 
-	bool buyItem(const string& itemName, double expectedPrice, TMemo* memo) {
+bool buyItem(const string& itemName, double expectedPrice, TMemo* memo) {
 		for (auto& seller : sellers) {
 			for (const auto& item : seller.getItems()) {
 				if (item.getNama() == itemName) {
@@ -133,36 +130,40 @@ void __fastcall TForm1::ClickBeliBarang(TObject *Sender)
 {
 	string itemNama = AnsiString(Edit2->Text).c_str();
 	double itemHarga = StrToFloat(Edit1->Text);
-
+	Edit2->Text ="";
+    Edit1->Text ="";
 	bool result = shop.buyItem(itemNama, itemHarga, ListTitipan);
 
 	if (result) {
 		ShowMessage("Item telah berhasil dibeli.");
+		MetodePembayaranForm->Show();
 	} else {
 		ShowMessage("Pembelian item gagal. Periksa kembali nama dan harga item.");
 	}
-		MetodePembayaranForm->Show ();
 }
-//---------------------------------------------------------------------------
-
 void __fastcall TForm1::ClickTitipBarang(TObject *Sender)
 {
 
+
+
+//---------------------------------------------------------------------------
 	string itemNama = AnsiString(Edit4->Text).c_str();
 	double itemHarga = StrToFloat(Edit3->Text);
 	string sellerNama = AnsiString(Edit5->Text).c_str();
 
 	Seller seller(sellerNama);
+	Edit4->Text = "";
+	Edit3->Text = "";
+    Edit5->Text = "";
 
-	Item item(itemNama, itemHarga);
+
+
+
+
+Item item(itemNama, itemHarga);
 	seller.addItem(item);
-
+	ListTitipan->Lines->Add("Nama: " + UnicodeString(itemNama.c_str()));
+	ListTitipan->Lines->Add("Harga: " + UnicodeString(itemHarga));
 	shop.addSeller(seller);
-	ListTitipan->Lines->Add("Penjual dan item telah ditambahkan.");
-	ShowMessage("Item telah ditambahkan!");
-
-
-	}
-
-
-
+	ShowMessage("Titipan Berhasil Ditambahkan");
+}
